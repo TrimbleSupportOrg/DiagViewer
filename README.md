@@ -7,3 +7,4 @@ Changes for first dealer release:
 - fileload.js: Comment out file load handler for zsnap to detect as unsupported at all
 - mainpage.js: Comment out resize handler for gnss map to keep at size
 - fileload.js: Remove create link to google maps section
+- index.html: Comment out the google maps script

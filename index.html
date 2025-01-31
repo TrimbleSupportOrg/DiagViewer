@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <link rel="shortcut icon" href="resources/images/product-logo.png" />
+  <title>Diagnostic Viewer</title>
+  
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="resources/styles/stylesheet.css"
+  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <script src="resources/functions/mainpage.js"></script>
+  <script src="resources/functions/subpage.js"></script>
+  <script src="resources/functions/fileload.js"></script>
+  <script src="resources/functions/machineclass.js"></script>
+  <script src="resources/functions/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script src="resources/functions/plot.js"></script>
+  <script src="resources/functions/assistant.js"></script>
+
+</head>
+<body ondragover="dragOverHandler(event);" ondrop="dropHandler(event);">
+
+<!-- ------------------------------------  FILE PAGE ------------------------------------  -->
+  <div class="filePage" id="flPage">
+  
+    <button class="signInBtn" id="signIn" onclick="signIn()"><img style="height:38px" src="resources/images/logo_google_icon.png"/> Sign in with Google</button>
+    
+	<div class="fileActionBar">
+	  <button class="backBtn" id="backBtn" onclick="showMain()"><i class="fa fa-chevron-left"></i> Back</button>
+      <button class="themeBtn" id="dropThemeInfo" onclick='changeTheme()'><img id="dropThemeIcon" src="resources/images/ligth.png"/></button>
+	</div>
+	
+    <div class="softwareInfo" id="swInfo">
+      <div class="spinner-active" id="spin">
+	    <img style="width: 80%; height: 80%" src="resources/images/product-logo.png"/>
+	  </div>
+      <img style="height:30px" src="resources/images/brand-name.png"/>
+      <h1>Diagnostic Viewer</h1>
+	  <div class="privTerms">
+	    <a href="https://www.trimble.com/en/our-commitment/responsible-business/data-privacy-and-security/data-privacy-center">Privacy</a>
+	    <p>&nbsp|&nbsp</p>
+	    <a href="https://www.trimble.com/en/legal/terms-and-conditions/terms-of-use">Terms of Use</a>
+      </div>
+	  <p>&copy; Copyright 2025, Trimble Inc.</p>
+    </div>
+	
+    <div class="fileUpload" id="flUpload">
+      <img style="height:100px" src="resources/images/dragdrop.png"/>
+	  <p>Load <!--Zsnap, -->Diagnostic or *diag.txt file via drag and drop or</p> <!-- ToDo: Comment out for further publications -->
+      <button class="chooseBtn" onclick="document.getElementById('filepicker').click()">Choose File</button>
+      <input type="file" id="filepicker" onchange="loadFile(undefined)"/>
+    </div>
+	
+	<img class="compImg" src="resources/images/LogoName_Trimble.png"/>
+	
+  </div>
+  
+<!-- ------------------------------------  MAIN PAGE ------------------------------------  -->
+  <div class="wrapper" id="mnPage">
+
+    <div class="header">
+      <div class="headerLogo">
+        <img class="productImg" src="resources/images/product-logo.png"/>
+        <img class="brandImg" src="resources/images/brand-name.png"/>
+      </div>
+	  <div class="title">
+        <h3>Diagnostic Viewer</h3>
+	    <p id="progTitle"></p>
+	  </div>
+      <div class="actionBar">
+        <!--ACTION BAR-->
+        <button class="iconBtn" id="posSourceBtn" style="display:none"><img id="posSource"/></button>
+        <button class="iconBtn" id="gnssErrorBtn" onclick='openPage("gnssdetails")' style="display:none"><div class="gnssError" id="posError"></div></button>
+        <button class="iconBtn" id="cellSignalBtn" onclick='openPage("internet")' style="display:none"><img id="cellSignal"/></button>
+        <button class="iconBtn" id="wifiIconBtn" onclick='openPage("internet")' style="display:none"><img id="wifiIcon"/></button>
+        <button class="iconBtn" id="cloudIconBtn" onclick='openPage("cloud")' style="display:none"><img id="cloudIcon"/></button>
+
+        <button class="fileBtn" onclick="showFileLoadClick()">Choose File <img src="resources/images/dragdrop.png"/></button>
+			
+        <button class="iconBtn" id="themeInfo" onclick='changeTheme()'><img id="themeIcon" src="resources/images/ligth.png"/></button>
+      </div>
+    </div>
+
+    <div class="sidenav" id="sidenav" onmouseenter="enterNav()" onmouseleave="leaveNav()">
+      <div class="sidenav-info" id="sideinfo" onclick="fixNav()">
+        <img id="lockIcon" src="resources/images/unlocked.png"/>
+		<p id="machineInfo"></p>
+        <img id="machineIcon" style="width:60px"/>
+      </div>
+      <button class="sidenav-btn" onclick="openBtnContent()"><img src="resources/images/home.png"/> HOME</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="summaryA" onclick='openContent("summary")'><p>Machine Summary</p></div>
+          <div class="sidenav-div" id="featuresA" onclick='openContent("features")'>Features in the System</div>
+        </div>
+      <button class="sidenav-btn" onclick="openBtnContent()"><img src="resources/images/monitor.png"/> MONITOR</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="devicesA" onclick='openContent("devices")'>Onboard Devices</div>
+          <div class="sidenav-div" id="viewA" onclick='openContent("view")'>Machine View</div>
+          <div class="sidenav-div" id="gnssdetailsA" onclick='openContent("gnssdetails")'>GNSS Details</div>
+          <div class="sidenav-div" id="utsdetailsA" onclick='openContent("utsdetails")'>UTS Details</div>
+          <div class="sidenav-div" id="diagnosticsA" onclick='openContent("diagnostics")'>Machine Diagnostics</div>
+          <div class="sidenav-div" id="positionsA" onclick='openContent("positions")'>Machine Positions</div>
+        </div>
+      <button class="sidenav-btn" onclick="openBtnContent()"><img src="resources/images/operation.png"/> OPERATION</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="mappingA" onclick='openContent("mapping")'>Mapping</div>
+        </div>
+      <button class="sidenav-btn" onclick="openBtnContent()"><img src="resources/images/configure.png"/> CONFIGURE</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="installA" onclick='openContent("install")'>Install Assistant</div>
+          <div class="sidenav-div" id="measureA" onclick='openContent("measure")'>Measure-up</div>
+          <div class="sidenav-div" id="attachmentA" onclick='openContent("attachment")'>Attachment</div>
+          <div class="sidenav-div" id="valveA" onclick='openContent("valve")'>Valve Test</div>
+          <div class="sidenav-div" id="autosA" onclick='openContent("autos")'>Autos Optimization</div>
+        </div>
+      <button class="sidenav-btn" onclick="openBtnContent()"><img src="resources/images/network.png"/> NETWORK</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="internetA" onclick='openContent("internet")'>Internet Gateway</div>
+          <div class="sidenav-div" id="correctionA" onclick='openContent("correction")'>GNSS Correction Source</div>
+          <div class="sidenav-div" id="cloudA" onclick='openContent("cloud")'>Cloud Services</div>
+          <div class="sidenav-div" id="clientsA" onclick='openContent("clients")'>Connected Clients</div>
+          <div class="sidenav-div" id="httpA" onclick='openContent("http")'>Recent Http Requests</div>
+          <div class="sidenav-div" id="canA" onclick='openContent("can")'>CAN API Periodic Messages</div> 
+          <div class="sidenav-div" id="remoteA" onclick='openContent("remote")'>Remote.it</div> 
+        </div>
+      <button class="sidenav-btn" onclick="openBtnContent()"><img src="resources/images/advanced.png"/> ADVANCED</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="licensesA" onclick='openContent("licenses")'>Licenses</div>
+          <div class="sidenav-div" id="firmwareA" onclick='openContent("firmware")'>Firmware Upgrades</div>
+          <div class="sidenav-div" id="diagtxtA" onclick='openContent("diagtxt")'>Diagnostics.txt</div> 
+        </div>
+      <button class="sidenav-btn" id="sidenavDevBtn" onclick="openBtnContent()" style="display:none"><img src="resources/images/exclamation.png"/> DEV TOOLS</button>
+        <div class="sidenav-container">
+          <div class="sidenav-div" id="devlogA"  onclick='openContent("devlog")' style='display:block'>DEV File Log</div>
+        </div>
+    </div>
+
+    <div class="content-frame" id="contentFrame">
+    </div>
+
+    <div class="footer">
+      &copy; Copyright 2025, Trimble Inc.
+    </div>
+
+    <button class="assist-btn" ><img src="resources/images/assistant_logo.png" onclick='openPage("assistant")'/></button>
+	
+  </div>
+
+  <!--include google maps-->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=maps,marker&v=beta"
+    defer
+  ></script>
+
+  <script>
+    document.onreadystatechange = function () {
+      if (document.readyState !== "complete") {
+	    setTimeout(() => {
+		  showLogIn();
+		}, "500");
+      } else {
+      showLoading();
+	  }
+    };
+  </script>
+
+</body>
+</html>
